@@ -1,5 +1,5 @@
-﻿using Helper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -28,7 +28,30 @@ namespace DataAccess
                 oSqlCommand.ExecuteNonQuery();
                 var Value = oSqlCommand.Parameters["ReturnValue"].Value;
                 sqlConnection.Close();
-                return Value.ConvertToBoolean();
+                return Convert.ToBoolean(Value);
+            }
+        }
+        /// <summary>
+        /// Insert records in Db table
+        /// </summary>
+        /// <param name="Procedure">expects sql store procedure name</param>
+        /// <param name="ConnectionString">expects db connection string</param>
+        /// <param name="DbSqlParameters">expects sql parameters</param>
+        /// <returns>if inserted the return actual ReturnValue</returns>
+        public string InsertAndGetReturnValue(string Procedure, string ConnectionString, List<SqlParameter> DbSqlParameters)
+        {
+            using (var sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+                var oSqlCommand = new SqlCommand(Procedure, sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                foreach (var Parameter in DbSqlParameters) { oSqlCommand.Parameters.Add(Parameter); }
+                oSqlCommand.ExecuteNonQuery();
+                var Value = oSqlCommand.Parameters["ReturnValue"].Value;
+                sqlConnection.Close();
+                return Convert.ToString(Value);
             }
         }
         /// <summary>
@@ -51,7 +74,30 @@ namespace DataAccess
                 oSqlCommand.ExecuteNonQuery();
                 var Value = oSqlCommand.Parameters["ReturnValue"].Value;
                 sqlConnection.Close();
-                return Value.ConvertToBoolean();
+                return Convert.ToBoolean(Value);
+            }
+        }
+        /// <summary>
+        /// updates records in Db table
+        /// </summary>
+        /// <param name="Procedure">expects sql store procedure name</param>
+        /// <param name="ConnectionString">expects db connection string</param>
+        /// <param name="DbSqlParameters">expects sql parameters</param>
+        /// <returns>if inserted the return actual ReturnValue</returns>
+        public string UpdateAndGetReturnValue(string Procedure, string ConnectionString, List<SqlParameter> DbSqlParameters)
+        {
+            using (var sqlConnection = new SqlConnection(ConnectionString))
+            {
+                sqlConnection.Open();
+                var oSqlCommand = new SqlCommand(Procedure, sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                foreach (var Parameter in DbSqlParameters) { oSqlCommand.Parameters.Add(Parameter); }
+                oSqlCommand.ExecuteNonQuery();
+                var Value = oSqlCommand.Parameters["ReturnValue"].Value;
+                sqlConnection.Close();
+                return Convert.ToString(Value);
             }
         }
         /// <summary>
@@ -74,7 +120,7 @@ namespace DataAccess
                 oSqlCommand.ExecuteNonQuery();
                 var Value = oSqlCommand.Parameters["ReturnValue"].Value;
                 sqlConnection.Close();
-                return Value.ConvertToBoolean();
+                return Convert.ToBoolean(Value);
             }
         }
         /// <summary>
